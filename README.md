@@ -1,9 +1,7 @@
 # DeepSeek Harness container
 
 This repository builds a pinned, non-root Docker image for the DeepSeek
-Harness web UI. The runtime listens on the container's port `3080`; the
-included Compose configuration publishes it only on the local loopback
-interface.
+Harness web UI. It packages the upstream [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) system as a pinned, non-root Docker image. DeepSeek Harness is the system source; this repository contains its container packaging, runtime configuration, and CI workflow. The runtime listens on the container's port `3080`; the included Compose configuration publishes it only on the local loopback interface.
 
 ## Run locally
 
@@ -40,19 +38,24 @@ providing equivalent access controls.
 
 ## Image tags and releases
 
+Published images are available from GitHub Container Registry:
+
+```sh
+docker pull ghcr.io/chy9002/deepseek-harness:latest
+```
+
 For reproducible deployments, use an exact published image tag or digest,
 for example:
 
 ```sh
-docker pull ghcr.io/OWNER/deepseek-harness:0.1.0
+docker pull ghcr.io/chy9002/deepseek-harness:0.1.0
 docker run --rm \
   -p 127.0.0.1:3080:3080 \
-  ghcr.io/OWNER/deepseek-harness:0.1.0
+  ghcr.io/chy9002/deepseek-harness:0.1.0
 ```
 
-Pinning by digest (`ghcr.io/OWNER/deepseek-harness@sha256:...`) is strongest;
-verify the digest from the trusted release output before promotion. Replace
-`OWNER` with the publishing GitHub organization or user.
+Pinning by digest (`ghcr.io/chy9002/deepseek-harness@sha256:...`) is strongest;
+verify the digest from the trusted release output before promotion.
 
 The Dockerfile pins the DSH npm release. To update it, review the upstream
 release, change the exact version intentionally, rebuild, and run the smoke
