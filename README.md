@@ -75,7 +75,12 @@ than building it locally. It uses two host-directory mounts:
   files**): files created or changed in the container's working directory.
 
 Both directories are intentionally ignored by Git so that runtime state and
-workspace files are not committed. Start the published-image deployment with:
+workspace files are not committed. The one-shot `dsh-init` service runs as root
+only long enough to assign these bind-mounted directories to the image's `dsh`
+user. The main `dsh` service still runs as that non-root user. This also repairs
+permissions on existing directories created previously by root or another user.
+
+Start the published-image deployment with:
 
 ```sh
 mkdir -p data/dsh workspace

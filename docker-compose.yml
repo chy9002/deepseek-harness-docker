@@ -1,6 +1,18 @@
 services:
+  dsh-init:
+    image: ghcr.io/chy9002/deepseek-harness:latest
+    user: "0:0"
+    entrypoint: ["/bin/sh", "-c"]
+    command: chown -R dsh:dsh /home/dsh/.dsh /workspace
+    volumes:
+      - ./data/dsh:/home/dsh/.dsh
+      - ./workspace:/workspace
+
   dsh:
     image: ghcr.io/chy9002/deepseek-harness:latest
+    depends_on:
+      dsh-init:
+        condition: service_completed_successfully
     ports:
       - "127.0.0.1:3080:3080"
     volumes:
