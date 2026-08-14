@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Build image
+        run: docker build --tag deepseek-harness-docker:test .
+      - name: Run smoke test
+        run: IMAGE_REF=deepseek-harness-docker:test sh tests/smoke.sh

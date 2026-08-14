@@ -1,0 +1,13 @@
+services:
+  dsh:
+    build:
+      context: .
+    image: deepseek-harness-docker:local
+    ports:
+      - "127.0.0.1:3080:3080"
+    volumes:
+      - dsh-state:/home/dsh/.dsh
+      - ./workspace:/workspace
+
+volumes:
+  dsh-state:

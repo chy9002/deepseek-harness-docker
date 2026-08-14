@@ -1,0 +1,33 @@
+name: Check upstream DSH release
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Open an issue when npm has a newer release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          pinned="$(grep -Eo '@deepseek-ai/dsh@[0-9][^[:space:]\"]*' Dockerfile | sed 's/.*@//' | head -n 1)"
+          latest="$(curl --fail --silent --show-error https://registry.npmjs.org/@deepseek-ai%2fdsh/latest | sed -n 's/.*"version":"\([^"]*\)".*/\1/p')"
+          test -n "${pinned}" && test -n "${latest}"
+          [ "${pinned}" = "${latest}" ] && exit 0
+          command -v gh >/dev/null 2>&1 || {
+            echo "gh CLI unavailable; upstream=${latest}, pinned=${pinned}" >&2
+            exit 0
+          }
+          gh issue create \
+            --title "Upstream DSH release: ${latest}" \
+            --body "npm reports @deepseek-ai/dsh ${latest}; Dockerfile is pinned to ${pinned}. Review and update the pin intentionally. This check does not modify source or publish an image."
