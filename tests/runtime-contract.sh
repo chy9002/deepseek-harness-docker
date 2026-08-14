@@ -6,6 +6,7 @@ case "$dockerfile" in
   *'ARG DSH_VERSION'*) echo 'DSH version must not be build-arg overridable' >&2; exit 1 ;;
 esac
 printf '%s\n' "$dockerfile" | grep -F 'npm install --global --omit=dev @deepseek-ai/dsh@0.1.0-rc.6' >/dev/null
+printf '%s\n' "$dockerfile" | grep -F 'apt-get install --no-install-recommends --yes tini socat curl python3 make g++' >/dev/null
 
 grep -F 'kill "$dsh_pid"' docker/entrypoint.sh >/dev/null
 grep -F 'wait "$dsh_pid"' docker/entrypoint.sh >/dev/null

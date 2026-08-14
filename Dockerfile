@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.title="DeepSeek Harness" \
       org.opencontainers.image.source="https://github.com/deepseek-ai/deepseek-harness"
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends --yes tini socat curl \
+    && apt-get install --no-install-recommends --yes tini socat curl python3 make g++ \
     && npm install --global --omit=dev @deepseek-ai/dsh@0.1.0-rc.6 \
     && npm cache clean --force \
     && groupadd --system dsh \
