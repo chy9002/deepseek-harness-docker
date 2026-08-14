@@ -15,7 +15,7 @@ RUN apt-get update \
     && chown --recursive dsh:dsh /home/dsh /workspace \
     && rm --recursive --force /var/lib/apt/lists/*
 
-COPY --chown=dsh:dsh docker/entrypoint.sh /usr/local/bin/dsh-entrypoint
+COPY --chmod=755 --chown=dsh:dsh docker/entrypoint.sh /usr/local/bin/dsh-entrypoint
 
 ENV DSH_HOME=/home/dsh/.dsh
 

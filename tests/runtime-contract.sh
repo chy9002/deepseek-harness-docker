@@ -9,6 +9,7 @@ printf '%s\n' "$dockerfile" | grep -F 'npm install --global --omit=dev @deepseek
 printf '%s\n' "$dockerfile" | grep -F 'apt-get install --no-install-recommends --yes tini socat curl python3 make g++' >/dev/null
 grep -Fx 'dsh web --port 3081 &' docker/entrypoint.sh >/dev/null
 grep -Fx 'socat TCP-LISTEN:3080,bind=0.0.0.0,reuseaddr,fork TCP:127.0.0.1:3081 &' docker/entrypoint.sh >/dev/null
+grep -F 'COPY --chmod=755 --chown=dsh:dsh docker/entrypoint.sh /usr/local/bin/dsh-entrypoint' Dockerfile >/dev/null
 if grep -F 'docker run -d --rm' tests/smoke.sh >/dev/null; then
   echo 'smoke test must retain failed containers long enough to print diagnostics' >&2
   exit 1
