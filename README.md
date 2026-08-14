@@ -63,3 +63,21 @@ test. Releases are published to GHCR from a version tag (or an explicitly
 authorized manual release) after CI validation. Deploy a new immutable tag or
 digest only after reviewing its changelog and security impact; never use
 `latest` for production.
+
+## Persisting data with the published image
+
+[`docker-compose.yml`](docker-compose.yml) runs the published GHCR image rather
+than building it locally. It uses two host-directory mounts:
+
+- `./data/dsh:/home/dsh/.dsh` (**required for persistence**): DSH configuration,
+  sessions, and state. Back up this directory before upgrades or migration.
+- `./workspace:/workspace` (**optional, but recommended when DSH works on local
+  files**): files created or changed in the container's working directory.
+
+Both directories are intentionally ignored by Git so that runtime state and
+workspace files are not committed. Start the published-image deployment with:
+
+```sh
+mkdir -p data/dsh workspace
+docker compose -f docker-compose.yml up -d
+```

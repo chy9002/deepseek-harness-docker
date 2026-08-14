@@ -1,0 +1,9 @@
+services:
+  dsh:
+    image: ghcr.io/chy9002/deepseek-harness:latest
+    ports:
+      - "127.0.0.1:3080:3080"
+    volumes:
+      - ./data/dsh:/home/dsh/.dsh
+      - ./workspace:/workspace
+    restart: unless-stopped
