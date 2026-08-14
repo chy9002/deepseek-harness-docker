@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 set -eu
 
-dsh web &
+dsh web --port 3081 &
 dsh_pid=$!
 
-socat TCP-LISTEN:3080,bind=0.0.0.0,reuseaddr,fork TCP:127.0.0.1:3080 &
+socat TCP-LISTEN:3080,bind=0.0.0.0,reuseaddr,fork TCP:127.0.0.1:3081 &
 proxy_pid=$!
 
 forward_signal() {

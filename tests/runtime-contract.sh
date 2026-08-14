@@ -7,6 +7,13 @@ case "$dockerfile" in
 esac
 printf '%s\n' "$dockerfile" | grep -F 'npm install --global --omit=dev @deepseek-ai/dsh@0.1.0-rc.6' >/dev/null
 printf '%s\n' "$dockerfile" | grep -F 'apt-get install --no-install-recommends --yes tini socat curl python3 make g++' >/dev/null
+grep -Fx 'dsh web --port 3081 &' docker/entrypoint.sh >/dev/null
+grep -Fx 'socat TCP-LISTEN:3080,bind=0.0.0.0,reuseaddr,fork TCP:127.0.0.1:3081 &' docker/entrypoint.sh >/dev/null
+if grep -F 'docker run -d --rm' tests/smoke.sh >/dev/null; then
+  echo 'smoke test must retain failed containers long enough to print diagnostics' >&2
+  exit 1
+fi
+grep -F 'docker inspect --format' tests/smoke.sh >/dev/null
 
 grep -F 'kill "$dsh_pid"' docker/entrypoint.sh >/dev/null
 grep -F 'wait "$dsh_pid"' docker/entrypoint.sh >/dev/null
